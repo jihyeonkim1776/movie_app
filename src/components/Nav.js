@@ -1,6 +1,9 @@
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import styled from "styled-components";
+import app from "../firebaseApp";
 
 const Nav = () => {
   const [show, setShow] = useState(false);
@@ -8,6 +11,9 @@ const Nav = () => {
   console.log(pathname);
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
+
+  const auth = getAuth(app);
+  const [isAuthenticated, setIsAuthenticated] = useState(!!auth?.currentUser);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
@@ -31,6 +37,27 @@ const Nav = () => {
     setSearchValue(e.target.value);
     navigate(`/search?q=${e.target.value}`);
   };
+  const onSignOut = async () => {
+    try {
+      const auth = getAuth(app);
+      await signOut(auth);
+      navigate("/");
+      toast.success("로그아웃 되었습니다.");
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.code);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setIsAuthenticated(!!user);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, [auth]);
 
   return (
     <NavWrapper $show={show}>
@@ -39,6 +66,7 @@ const Nav = () => {
           src="/images/logo.png"
           alt="logo"
           onClick={() => (window.location.href = "/")}
+          style={{ cursor: "pointer" }}
         />
       </Logo>
       <Input
@@ -48,6 +76,22 @@ const Nav = () => {
         type="text"
         placeholder="검색해주세요."
       />
+      <Menu>
+        {isAuthenticated ? (
+          <>
+            <Link to="/" className="log out" onClick={onSignOut}>
+              Log Out
+            </Link>
+            <Link to="/profile" className="profile">
+              Profile
+            </Link>
+          </>
+        ) : (
+          <Link to="/login" className="login">
+            Login
+          </Link>
+        )}
+      </Menu>
     </NavWrapper>
   );
 };
@@ -76,9 +120,17 @@ const NavWrapper = styled.nav`
   background-color: ${($show) => ($show ? "#090b13" : "transparent")};
   display: flex;
   justify-content: space-between;
-  padding: 0 36px;
-  letter-spacing: 16px;
+  padding: 0 5vw;
   z-index: 3;
+`;
+
+const Menu = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2vh;
+  letter-spacing: 0.3vh;
+  gap: 2vh;
 `;
 
 const Logo = styled.a`

@@ -6,6 +6,8 @@ import MovieModal from "./MovieModal";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 
 import { Swiper, SwiperSlide } from "swiper/react";
+import { FaStar } from "react-icons/fa6";
+import { FaRegHeart } from "react-icons/fa6";
 
 // import swiper style
 
@@ -22,6 +24,7 @@ const Row = ({ title, id, fetchUrl }) => {
     const response = await axios.get(fetchUrl);
     // console.log('response', response);
     setMovies(response.data.results);
+    console.log("response:", response);
   }, [fetchUrl]);
 
   useEffect(() => {
@@ -31,6 +34,10 @@ const Row = ({ title, id, fetchUrl }) => {
   const handleClick = (movie) => {
     setModalOpen(true);
     setMovieSelection(movie);
+  };
+
+  const truncate = (str, n) => {
+    return str?.length > n ? str.substring(0, n) + "..." : str;
   };
 
   return (
@@ -72,11 +79,41 @@ const Row = ({ title, id, fetchUrl }) => {
                   onClick={() => handleClick(movie)}
                 />
               </Wrap>
+
+              <TextGroup>
+                <Title>
+                  {truncate(
+                    movie.title || movie.original_title || movie.name,
+                    12
+                  )}
+                </Title>
+                <Detail>
+                  <div>
+                    {movie.first_air_date
+                      ? new Date(movie.first_air_date).getFullYear()
+                      : movie.release_date
+                      ? new Date(movie.release_date).getFullYear()
+                      : ""}
+                  </div>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "5px",
+                      marginRight: "10px",
+                    }}
+                  >
+                    {" "}
+                    <FaRegHeart />
+                    <FaStar style={{ color: "yellow" }} />
+                    {movie.vote_average.toFixed(1)}
+                  </div>
+                </Detail>
+              </TextGroup>
             </SwiperSlide>
           ))}
         </Content>
       </Swiper>
-
       {modalOpen && (
         <MovieModal {...movieSelected} setModalOpen={setModalOpen} />
       )}
@@ -91,6 +128,22 @@ const Container = styled.div`
 `;
 
 const Content = styled.div``;
+const TextGroup = styled.div`
+  color: white;
+  padding: 1.5% 2%;
+  height: 90px;
+`;
+const Title = styled.div`
+  color: white;
+  font-size: 2.7vh;
+  padding: 5px 0;
+`;
+
+const Detail = styled.div`
+  display: flex;
+  justify-content: space-between;
+  font-size: 2.3vh;
+`;
 
 const Wrap = styled.div`
   width: 95%;

@@ -70,6 +70,7 @@ const Banner = () => {
             {movie.title || movie.name || movie.original_name}
           </h1>
 
+          <p className="banner__description">{truncate(movie.overview, 100)}</p>
           <div className="banner__buttons">
             {movie?.videos?.results[0]?.key && (
               <button
@@ -79,8 +80,8 @@ const Banner = () => {
                 Play
               </button>
             )}
+            <button>Info</button>
           </div>
-          <p className="banner__description">{truncate(movie.overview, 100)}</p>
         </div>
         <div className="banner--fadeBottom" />
       </header>
