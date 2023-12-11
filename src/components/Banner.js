@@ -1,12 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import axios from "../api/axios";
 import requests from "../api/request";
+import MovieModal from "./MovieModal";
+
 import "./Banner.css";
 
 const Banner = () => {
   const [movie, setMovie] = useState([]);
   const [isClicked, setIsClicked] = useState(false);
+  const [movies, setMovies] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [movieSelected, setMovieSelection] = useState({});
+  const fetchMovieData = useCallback(async () => {
+    const response = await axios.get(requests.fetchNowPlaying);
+    // console.log('response', response);
+    setMovies(response.data.results);
+    console.log("response:", response);
+  }, [requests.fetchNowPlaying]);
+
+  useEffect(() => {
+    fetchMovieData();
+  }, [fetchMovieData]);
+  const handleClick = (movie) => {
+    setModalOpen(true);
+    setMovieSelection(movie);
+  };
 
   useEffect(() => {
     fetchData();
@@ -27,6 +46,7 @@ const Banner = () => {
     });
 
     setMovie(movieDetail);
+    console.log("detail:", movieDetail);
   };
 
   const truncate = (str, n) => {
@@ -50,6 +70,7 @@ const Banner = () => {
         <button
           style={{ position: "fixed", top: "90px", right: "30px" }}
           onClick={() => setIsClicked(false)}
+          className="banner_button"
         >
           X
         </button>
@@ -80,7 +101,15 @@ const Banner = () => {
                 Play
               </button>
             )}
-            <button>Info</button>
+            <button
+              onClick={() => handleClick(movie)}
+              className="banner__button"
+            >
+              Info
+            </button>
+            {modalOpen && (
+              <MovieModal {...movieSelected} setModalOpen={setModalOpen} />
+            )}
           </div>
         </div>
         <div className="banner--fadeBottom" />

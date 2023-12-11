@@ -12,7 +12,7 @@ import SignupForm from "./components/SignupForm";
 import LoginForm from "./components/LoginForm";
 import { useEffect, useState } from "react";
 import ProfilePage from "./pages/ProfilePage";
-import app from "./firebaseApp";
+import app, { db } from "./firebaseApp";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -29,6 +29,7 @@ const Layout = () => {
 };
 
 function App() {
+  console.log(db);
   const auth = getAuth(app);
   const [isAuthenticated, setIsAuthenticated] = useState(!!auth?.currentUser);
   const [init, setInit] = useState(false);

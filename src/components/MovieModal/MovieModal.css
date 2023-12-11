@@ -100,3 +100,9 @@
     overflow-y: scroll !important;
   }
 }
+
+.movie__like {
+  width: 100px; /* Set an appropriate width */
+  height: auto; /* Adjust height accordingly or use a fixed height */
+  margin-right: 10px; /* Add some spacing between images */
+}

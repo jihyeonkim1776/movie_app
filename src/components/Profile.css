@@ -1,4 +1,61 @@
 .profile__box {
+  /* position: absolute; */
+  width: 100%;
+  margin-top: 13vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.profile__photo {
+  width: 20vh;
+  height: 20vh;
+  border: 5px solid transparent;
+  border-radius: 50%;
+  background-image: linear-gradient(#000, #000),
+    linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+  background-origin: border-box;
+  background-clip: content-box, border-box;
+  margin-bottom: 2vh;
+  overflow: hidden;
+  position: relative;
+}
+
+.profile__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+}
+
+.post-form__delete-icon {
   position: absolute;
-  top: 100px;
+  top: 9vw;
+  left: 54vw;
+}
+
+.hidden {
+  display: none;
+}
+
+.flex__box-lg {
+  text-align: center;
+}
+
+.flex__box-like {
+  margin-top: 15px;
+}
+
+.movie__like {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 19px;
+  width: 100%;
+}
+
+.liked-movie-poster {
+  height: 18vh;
+  object-fit: contain;
 }

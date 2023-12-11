@@ -10,6 +10,7 @@ const MovieModal = ({
   first_air_date,
   vote_average,
   setModalOpen,
+  genres,
 }) => {
   return (
     <div className="presentation" role="presentation">

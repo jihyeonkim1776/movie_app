@@ -1,21 +1,34 @@
 import axios from "../api/axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import "./Row.css";
 import MovieModal from "./MovieModal";
-
+import {
+  collection,
+  addDoc,
+  updateDoc,
+  arrayRemove,
+  arrayUnion,
+  where,
+  query,
+  getDocs,
+  doc,
+} from "firebase/firestore";
+import app, { db, storage } from "../firebaseApp";
 import { Navigation, Pagination, Scrollbar, A11y } from "swiper/modules";
 
 import { Swiper, SwiperSlide } from "swiper/react";
 import { FaStar } from "react-icons/fa6";
-import { FaRegHeart } from "react-icons/fa6";
+import { AiFillHeart, AiOutlineHeart } from "react-icons/ai";
 
 // import swiper style
 
 import "swiper/css";
 import "swiper/css/navigation";
 import styled from "styled-components";
+import AuthContext from "../Context/AuthContext";
 
 const Row = ({ title, id, fetchUrl }) => {
+  const { user } = useContext(AuthContext); // Use destructuring to get user from AuthContext
   const [movies, setMovies] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [movieSelected, setMovieSelection] = useState({});
@@ -39,6 +52,77 @@ const Row = ({ title, id, fetchUrl }) => {
   const truncate = (str, n) => {
     return str?.length > n ? str.substring(0, n) + "..." : str;
   };
+  const onSubmit = async ({ id, backdrop_path, name }) => {
+    // Check if the document already exists for the movie
+    const postQuery = query(
+      collection(db, "posts"),
+      where("movieId", "==", id)
+    );
+    const postQuerySnapshot = await getDocs(postQuery);
+
+    if (!postQuerySnapshot.empty) {
+      // Document already exists, update the likes array
+      const postDoc = postQuerySnapshot.docs[0];
+      const postData = postDoc.data();
+      const postRef = doc(db, "posts", postDoc.id);
+
+      if (user?.uid && postData?.likes?.includes(user?.uid)) {
+        // User has already liked the movie, remove like
+        await updateDoc(postRef, {
+          likes: arrayRemove(user?.uid),
+        });
+      } else {
+        // User hasn't liked the movie, add like
+        await updateDoc(postRef, {
+          likes: arrayUnion(user?.uid),
+        });
+      }
+    } else {
+      // Document doesn't exist, create a new one
+      addDoc(collection(db, "posts"), {
+        movieId: id,
+        moviePost: backdrop_path,
+        movieTitle: name,
+        createdAt: new Date()?.toLocaleDateString("ko", {
+          hour: "2-digit",
+          minute: "2-digit",
+          second: "2-digit",
+        }),
+        likes: [user?.uid],
+      });
+    }
+  };
+  console.log("User ID:", user?.uid);
+
+  // const toggleLike = async (movieId) => {
+  //   // Assuming "posts" is the collection where you store movie information
+  //   const postQuery = query(
+  //     collection(db, "posts"),
+  //     where("movieId", "==", movieId)
+  //   );
+  //   const postQuerySnapshot = await getDocs(postQuery);
+
+  //   if (!postQuerySnapshot.empty) {
+  //     const postDoc = postQuerySnapshot.docs[0];
+  //     const postData = postDoc.data();
+
+  //     const postRef = doc(db, "posts", postDoc.id);
+
+  //     if (user?.uid && postData?.likes?.includes(user?.uid)) {
+  //       // User has already liked the movie, remove like
+  //       await updateDoc(postRef, {
+  //         likes: arrayRemove(user?.uid),
+  //         likeCount: postData?.likeCount ? postData?.likeCount - 1 : 0,
+  //       });
+  //     } else {
+  //       // User hasn't liked the movie, add like
+  //       await updateDoc(postRef, {
+  //         likes: arrayUnion(user?.uid),
+  //         likeCount: postData?.likeCount ? postData?.likeCount + 1 : 1,
+  //       });
+  //     }
+  //   }
+  // };
 
   return (
     <Container>
@@ -103,8 +187,21 @@ const Row = ({ title, id, fetchUrl }) => {
                       marginRight: "10px",
                     }}
                   >
-                    {" "}
-                    <FaRegHeart />
+                    {user && movie?.likes?.includes(user.uid) ? (
+                      <AiFillHeart className="fill_heart" />
+                    ) : (
+                      <AiOutlineHeart
+                        className="empty_heart"
+                        onClick={() =>
+                          onSubmit({
+                            id: movie.id,
+                            backdrop_path: movie.backdrop_path,
+                            name:
+                              movie.title || movie.original_title || movie.name,
+                          })
+                        }
+                      />
+                    )}
                     <FaStar style={{ color: "yellow" }} />
                     {movie.vote_average.toFixed(1)}
                   </div>
