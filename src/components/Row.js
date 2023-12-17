@@ -32,7 +32,7 @@ const Row = ({ title, id, fetchUrl }) => {
   const [movies, setMovies] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [movieSelected, setMovieSelection] = useState({});
-
+  const [likedMovies, setLikedMovies] = useState({});
   const fetchMovieData = useCallback(async () => {
     const response = await axios.get(fetchUrl);
     // console.log('response', response);
@@ -52,7 +52,16 @@ const Row = ({ title, id, fetchUrl }) => {
   const truncate = (str, n) => {
     return str?.length > n ? str.substring(0, n) + "..." : str;
   };
-  const onSubmit = async ({ id, backdrop_path, name }) => {
+  const onSubmit = async ({
+    id,
+    backdrop_path,
+    name,
+    overview,
+    release_date,
+    first_air_date,
+    vote_average,
+    genres,
+  }) => {
     // Check if the document already exists for the movie
     const postQuery = query(
       collection(db, "posts"),
@@ -79,10 +88,19 @@ const Row = ({ title, id, fetchUrl }) => {
       }
     } else {
       // Document doesn't exist, create a new one
+
+      // Check if genres is defined, provide a default value or handle accordingly
+      const movieGenres = genres || [];
+
       addDoc(collection(db, "posts"), {
         movieId: id,
         moviePost: backdrop_path,
         movieTitle: name,
+        overview: overview,
+        release_date: release_date,
+        first_air_date: first_air_date || null, // Provide a default value or handle accordingly
+        vote_average: vote_average,
+        genres: movieGenres,
         createdAt: new Date()?.toLocaleDateString("ko", {
           hour: "2-digit",
           minute: "2-digit",
@@ -187,7 +205,7 @@ const Row = ({ title, id, fetchUrl }) => {
                       marginRight: "10px",
                     }}
                   >
-                    {user && movie?.likes?.includes(user.uid) ? (
+                    {user && likedMovies[movie.id] ? (
                       <AiFillHeart className="fill_heart" />
                     ) : (
                       <AiOutlineHeart
@@ -198,6 +216,11 @@ const Row = ({ title, id, fetchUrl }) => {
                             backdrop_path: movie.backdrop_path,
                             name:
                               movie.title || movie.original_title || movie.name,
+                            overview: movie.overview,
+                            release_date: movie.release_date,
+                            first_air_date: movie.first_air_date,
+                            vote_average: movie.vote_average,
+                            genres: movie.genres,
                           })
                         }
                       />

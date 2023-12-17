@@ -4,14 +4,14 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import app from "../firebaseApp";
-
+import { IoMdSearch } from "react-icons/io";
 const Nav = () => {
   const [show, setShow] = useState(false);
   const { pathname } = useLocation();
   console.log(pathname);
   const [searchValue, setSearchValue] = useState("");
   const navigate = useNavigate();
-
+  const [searchVisible, setSearchVisible] = useState(false);
   const auth = getAuth(app);
   const [isAuthenticated, setIsAuthenticated] = useState(!!auth?.currentUser);
 
@@ -31,6 +31,9 @@ const Nav = () => {
     } else {
       setShow(false);
     }
+  };
+  const toggleSearch = () => {
+    setSearchVisible(!searchVisible);
   };
 
   const handleChange = (e) => {
@@ -69,14 +72,19 @@ const Nav = () => {
           style={{ cursor: "pointer" }}
         />
       </Logo>
-      <Input
-        value={searchValue}
-        onChange={handleChange}
-        className="nav__input"
-        type="text"
-        placeholder="검색해주세요."
-      />
+
       <Menu>
+        {searchVisible ? (
+          <Input
+            value={searchValue}
+            onChange={handleChange}
+            className="nav__input"
+            type="text"
+            placeholder="검색해주세요."
+          />
+        ) : (
+          <IoMdSearch onClick={toggleSearch} style={{ fontSize: "24px" }} />
+        )}
         {isAuthenticated ? (
           <>
             <Link to="/" className="log out" onClick={onSignOut}>

@@ -127,6 +127,8 @@
 
 .swiper-button-next::after,
 .swiper-button-prev::after {
-  font-size: 1.3rem !important;
+  font-size: 1.2rem !important;
   font-weight: 600 !important;
+  /* top: 80%; */
+  transform: translateY(-150%);
 }

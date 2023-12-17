@@ -1,6 +1,6 @@
-// import AuthContext from "context/AuthContext";
+//import AuthContext from "context/AuthContext";
 import { getAuth, signOut } from "firebase/auth";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import AuthContext from "../Context/AuthContext";
 import app, { db, storage } from "../firebaseApp";
@@ -16,11 +16,31 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import axios from "../api/axios";
+import MovieModal from "./MovieModal";
 
-const Profile = () => {
+const Profile = ({ title, id, fetchUrl }) => {
   const { user } = useContext(AuthContext);
   const [imageFile, setImageFile] = useState(null);
   const [myPosts, setMyPosts] = useState([]);
+  const [movies, setMovies] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [movieSelected, setMovieSelection] = useState({});
+  const fetchMovieData = useCallback(async () => {
+    const response = await axios.get(fetchUrl);
+    // console.log('response', response);
+    setMovies(response.data.results);
+    console.log("response:", response);
+  }, [fetchUrl]);
+
+  useEffect(() => {
+    fetchMovieData();
+  }, [fetchMovieData]);
+
+  const handleClick = (movie) => {
+    setModalOpen(true);
+    setMovieSelection(movie);
+  };
 
   const handleFileUpload = (e) => {
     const {
@@ -106,8 +126,12 @@ const Profile = () => {
               src={`https://image.tmdb.org/t/p/original${post.moviePost}`}
               alt={post.movieTitle}
               className="liked-movie-poster"
+              onClick={() => handleClick(post)}
             />
           ))}
+          {modalOpen && (
+            <MovieModal {...movieSelected} setModalOpen={setModalOpen} />
+          )}
         </div>
       </div>
     </div>
