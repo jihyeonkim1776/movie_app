@@ -102,6 +102,9 @@
   .row__poster {
     max-height: 280px;
   }
+  .title {
+    font-size: 4vh;
+  }
 }
 
 .swiper-pagination {
@@ -130,5 +133,5 @@
   font-size: 1.2rem !important;
   font-weight: 600 !important;
   /* top: 80%; */
-  transform: translateY(-150%);
+  transform: translateY(-115%);
 }

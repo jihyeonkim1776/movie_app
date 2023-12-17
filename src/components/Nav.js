@@ -117,6 +117,9 @@ const Input = styled.input`
   padding: 5px;
   border: none;
   top: 20px;
+  @media (max-width: 768px) {
+    font-size: 0.5rem;
+  }
 `;
 
 const NavWrapper = styled.nav`
@@ -148,9 +151,16 @@ const Logo = styled.a`
   max-height: 70px;
   font-size: 0;
   display: inline-block;
-
+  @media (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
   img {
     display: block;
     width: 100%;
+    @media (max-width: 768px) {
+      max-width: 40px;
+    }
   }
 `;

@@ -68,7 +68,11 @@ const Banner = () => {
           </HomeContainer>
         </Container>
         <button
-          style={{ position: "fixed", top: "90px", right: "30px" }}
+          style={{
+            position: "fixed",
+            top: "90px",
+            right: "30px",
+          }}
           onClick={() => setIsClicked(false)}
           className="banner_button"
         >

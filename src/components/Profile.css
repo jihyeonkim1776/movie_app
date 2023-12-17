@@ -21,6 +21,10 @@
   margin-bottom: 2vh;
   overflow: hidden;
   position: relative;
+  @media screen and (max-width: 768px) {
+    width: 16vh;
+    height: 16vh;
+  }
 }
 
 .profile__photo img {
@@ -40,8 +44,12 @@
   display: none;
 }
 
-.flex__box-lg {
+.profile__email,
+.profile__name {
   text-align: center;
+  @media screen and (max-width: 768px) {
+    font-size: 17px;
+  }
 }
 
 .flex__box-like {
@@ -53,9 +61,15 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 19px;
   width: 100%;
+  @media screen and (max-width: 768px) {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
 }
 
 .liked-movie-poster {
   height: 18vh;
   object-fit: contain;
+  border-radius: 4px;
 }

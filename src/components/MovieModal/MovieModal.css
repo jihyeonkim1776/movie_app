@@ -17,6 +17,7 @@
   cursor: pointer;
   z-index: 1000;
   color: white;
+  font-size: 22px;
 }
 
 .modal {

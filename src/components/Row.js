@@ -144,7 +144,7 @@ const Row = ({ title, id, fetchUrl }) => {
 
   return (
     <Container>
-      <h2>{title}</h2>
+      <h2 className="title">{title}</h2>
       <Swiper
         // install Swiper modules
         modules={[Navigation, Pagination, Scrollbar, A11y]}
@@ -252,17 +252,26 @@ const TextGroup = styled.div`
   color: white;
   padding: 1.5% 2%;
   height: 90px;
+  @media screen and (max-width: 768px) {
+    height: 60px;
+  }
 `;
 const Title = styled.div`
   color: white;
   font-size: 2.7vh;
   padding: 5px 0;
+  @media screen and (max-width: 768px) {
+    font-size: 2vh;
+  }
 `;
 
 const Detail = styled.div`
   display: flex;
   justify-content: space-between;
   font-size: 2.3vh;
+  @media screen and (max-width: 768px) {
+    font-size: 1.7vh;
+  }
 `;
 
 const Wrap = styled.div`

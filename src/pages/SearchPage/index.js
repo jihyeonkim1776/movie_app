@@ -1,18 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "../../api/axios";
+import MovieModal from "../../components/MovieModal";
 import { useDebounce } from "../../hooks/useDebounce";
+// Import your MovieModal component
 import "./SearchPage.css";
 
 const SearchPage = () => {
   const navigate = useNavigate();
+  const [modalOpen, setModalOpen] = useState(false);
   const [searchResults, setSearchResults] = useState([]);
+  const [selectedMovie, setSelectedMovie] = useState(null); // New state for selected movie
   const useQuery = () => {
     return new URLSearchParams(useLocation().search);
   };
   let query = useQuery();
   const searchTerm = query.get("q");
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
+
   useEffect(() => {
     if (debouncedSearchTerm) {
       fetchSearchMovie(debouncedSearchTerm);
@@ -25,10 +30,14 @@ const SearchPage = () => {
         `/search/multi?include_adult=false&query=${searchTerm}`
       );
       setSearchResults(response.data.results);
-      // console.log('response',response);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleClick = (movie) => {
+    setModalOpen(true);
+    setSelectedMovie(movie);
   };
 
   if (searchResults.length > 0) {
@@ -42,7 +51,7 @@ const SearchPage = () => {
               <div className="movie" key={movie.id}>
                 <div
                   className="movie__column-poster"
-                  onClick={() => navigate(`/${movie.id}`)}
+                  onClick={() => handleClick(movie)}
                 >
                   <img
                     src={movieImageUrl}
@@ -54,6 +63,9 @@ const SearchPage = () => {
             );
           }
         })}
+        {modalOpen && (
+          <MovieModal {...selectedMovie} setModalOpen={setModalOpen} />
+        )}
       </section>
     );
   } else {

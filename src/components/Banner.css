@@ -2,6 +2,7 @@
   color: white;
   object-fit: contain;
   height: 448px;
+  position: relative;
 }
 
 @media (min-width: 1500px) {
@@ -14,32 +15,40 @@
     position: absolute;
     bottom: 0;
     width: 100%;
-    height: 40rem;
+    height: 10rem;
   }
 }
 
 .banner__contents {
   margin-left: 40px;
-  padding-top: 60px;
+  padding-top: 40px;
   height: 190px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
 }
 
 .banner__title {
   font-size: 6vh;
   font-weight: 800;
+  margin: 10px 0;
 }
 
 .banner__description {
-  width: 40vw;
-  line-height: 1.3;
+  width: 45vw;
+  line-height: 1.2;
   padding: 3% 0;
   font-weight: 500;
   font-size: 3vh;
   height: 80px;
+  margin: 10px 0;
 }
 
 .banner--fadeBottom {
-  height: 9rem;
+  height: 3rem;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
   background-image: linear-gradient(
     180deg,
     transparent,
@@ -66,6 +75,7 @@
   font-size: 2.5vh;
   font-weight: 700;
   padding: 0.7% 2%;
+  box-sizing: border-box;
 }
 
 .banner__button:hover {
@@ -78,7 +88,24 @@
   background-color: white;
   color: black;
 }
+
+@media (max-width: 1024px) {
+  .banner__title {
+    font-size: 6vh;
+  }
+  .banner__description {
+    font-size: 1rem !important;
+    width: 70%;
+  }
+  .banner_button {
+    font-size: 1rem !important;
+    border-radius: 4px !important;
+  }
+}
 @media (max-width: 768px) {
+  .banner {
+    position: relative;
+  }
   .banner__contents {
     /* width: min-content !important; */
     padding-left: 1rem;
@@ -106,7 +133,14 @@
 
   .banner_button {
     font-size: 0.8rem !important;
-    border-radius: 4px !important;
-    padding: 30px !important;
+
+    padding: 3% 5%;
+    box-sizing: border-box;
+  }
+  .banner--fadeBottom {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 10rem;
   }
 }
