@@ -68,6 +68,14 @@ const SearchPage = () => {
         )}
       </section>
     );
+  } else if (searchResults.length === 0) {
+    return (
+      <section className="no-results">
+        <div className="no-results__text">
+          <p>검색어를 입력해주세요.</p>
+        </div>
+      </section>
+    );
   } else {
     return (
       <section className="no-results">

@@ -31,6 +31,7 @@
   transition: all 400ms ease-in-out 2s;
   animation: fadeIn 400ms;
   overflow-y: auto;
+  word-break: keep-all;
 }
 
 .modal__poster-img {

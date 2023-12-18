@@ -20,12 +20,12 @@
 .movie__column-poster img {
   border-radius: 4px;
 }
-.movie__column-poster {
-  @media screen and (max-width: 768px) {
+
+@media screen and (max-width: 768px) {
+  .movie__column-poster img {
     max-width: 100%;
   }
 }
-
 .no-results {
   display: flex;
   justify-content: center;
@@ -33,14 +33,18 @@
   color: #c5c5c5;
   height: 100%;
   padding: 8rem;
-  @media screen and (max-width: 768px) {
+}
+@media screen and (max-width: 768px) {
+  .no-results {
     padding: 4.5rem;
   }
 }
 
-.no-results__text {
-  @media screen and (max-width: 768px) {
+@media screen and (max-width: 768px) {
+  .no-results__text {
     padding: 1rem;
     font-size: 14px;
+    word-break: keep-all;
+    text-align: center;
   }
 }

@@ -1,10 +1,12 @@
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import app from "../firebaseApp";
+import { IoClose } from "react-icons/io5";
 import { IoMdSearch } from "react-icons/io";
+
 const Nav = () => {
   const [show, setShow] = useState(false);
   const { pathname } = useLocation();
@@ -23,8 +25,6 @@ const Nav = () => {
     };
   }, []);
 
-  // console.log("useLocation.search:", useLocation().search);
-
   const handleScroll = () => {
     if (window.scrollY > 50) {
       setShow(true);
@@ -32,14 +32,30 @@ const Nav = () => {
       setShow(false);
     }
   };
+
+  useEffect(() => {
+    // Check if the current pathname is "/search" and the search input is not visible
+    if (pathname === "/search" && !searchVisible) {
+      setSearchVisible(true);
+    }
+  }, [pathname]);
+
   const toggleSearch = () => {
-    setSearchVisible(!searchVisible);
+    // Navigate to the search page
+    navigate(`/search`);
+
+    // Toggle the search input after a short delay to ensure navigation completes
+    setTimeout(() => {
+      setSearchVisible(!searchVisible);
+    }, 300);
   };
 
   const handleChange = (e) => {
-    setSearchValue(e.target.value);
-    navigate(`/search?q=${e.target.value}`);
+    const newValue = e.target.value;
+    setSearchValue(newValue);
+    navigate(`/search?q=${newValue}`);
   };
+
   const onSignOut = async () => {
     try {
       const auth = getAuth(app);
@@ -75,13 +91,23 @@ const Nav = () => {
 
       <Menu>
         {searchVisible ? (
-          <Input
-            value={searchValue}
-            onChange={handleChange}
-            className="nav__input"
-            type="text"
-            placeholder="검색해주세요."
-          />
+          <InputWrapper>
+            <Input
+              value={searchValue}
+              onChange={handleChange}
+              className="nav__input"
+              type="text"
+              placeholder="검색해주세요."
+            />
+            {
+              <CloseButton
+                onClick={() => {
+                  setSearchValue("");
+                  toggleSearch();
+                }}
+              />
+            }
+          </InputWrapper>
         ) : (
           <IoMdSearch onClick={toggleSearch} style={{ fontSize: "24px" }} />
         )}
@@ -106,20 +132,30 @@ const Nav = () => {
 
 export default Nav;
 
-const Input = styled.input`
-  position: fixed;
-  left: 50%;
+const InputWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+`;
 
-  transform: translate(-50%, 0);
+const Input = styled.input`
   background-color: rgba(0, 0, 0, 0.582);
   border-radius: 5px;
   color: white;
   padding: 5px;
   border: none;
-  top: 20px;
   @media (max-width: 768px) {
     font-size: 0.5rem;
   }
+`;
+
+const CloseButton = styled(IoClose)`
+  font-size: 24px;
+  cursor: pointer;
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
 `;
 
 const NavWrapper = styled.nav`

@@ -186,7 +186,7 @@ const Row = ({ title, id, fetchUrl }) => {
                 <Title>
                   {truncate(
                     movie.title || movie.original_title || movie.name,
-                    12
+                    13
                   )}
                 </Title>
                 <Detail>
@@ -260,8 +260,13 @@ const Title = styled.div`
   color: white;
   font-size: 2.7vh;
   padding: 5px 0;
+  overflow: hidden;
+  white-space: nowrap;
   @media screen and (max-width: 768px) {
     font-size: 2vh;
+    overflow: hidden;
+    white-space: nowrap;
+    /* text-overflow: ellipsis; */
   }
 `;
 

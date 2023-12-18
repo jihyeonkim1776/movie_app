@@ -73,3 +73,19 @@
   object-fit: contain;
   border-radius: 4px;
 }
+
+.post-form__submit-btn {
+  background-image: linear-gradient(144deg, #af40ff, #5b42f3 50%, #00ddeb);
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+  border: none;
+  border-radius: 8px;
+  font-size: 2vh;
+  font-weight: 700;
+  padding: 0.5% 1.4%;
+  box-sizing: border-box;
+  color: #ccc;
+}
