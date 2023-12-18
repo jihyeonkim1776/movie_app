@@ -61,10 +61,21 @@
   grid-template-columns: repeat(5, 1fr);
   gap: 19px;
   width: 100%;
-  @media screen and (max-width: 768px) {
+}
+@media screen and (max-width: 768px) {
+  .movie__like {
     display: flex;
     align-items: center;
     flex-direction: column;
+  }
+}
+@media screen and (max-width: 1200px) {
+  .movie__like {
+    grid-template-columns: repeat(
+      2,
+      1fr
+    ); /* Set 2 columns for screens up to 1200px */
+    gap: 19px;
   }
 }
 
